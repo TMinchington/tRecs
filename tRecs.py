@@ -107,6 +107,13 @@ def make_start_and_ends_dics(track_dic):
     return start_dic, end_dic
 
 def get_closest_end(enders, starters, end, pos_dic):
+
+    """ finds the closest start cell to the supplied end cell
+    
+    Returns:
+        str -- id of the mother cell
+    """
+
     from pprint import pprint as pp
     dis_dic = {}
     pp(pos_dic[end+1])
@@ -268,6 +275,12 @@ def select_children(enders, starters, pos_dic, end):
 
 def missing_links(link_list):
 
+    """removes any links which are joined to a 'blank' cell
+    
+    Returns:
+        list -- list of reall connections with the 'blanks' removed.
+    """
+
     missing = [x for x in link_list if 'blank' in x]
 
     links = [x for x in link_list if not 'blank' in x]
@@ -279,6 +292,13 @@ def missing_links(link_list):
 
 
 def get_children(start_dic, end_dic, pos_dic):
+
+    """ find the children of cell base on the start and end positions of all cells
+    
+    Returns:
+        list -- list of tuples linking one cell to another.
+    """
+
     # pos_dic = 'temp'
     link_list = []
 
@@ -295,6 +315,14 @@ def get_children(start_dic, end_dic, pos_dic):
 
 
 def recursive_lineage(a, link_list, lin_ls):
+
+    """ 
+    recursively passes over the link list building families based on the starts and ends of the tuples
+    in the link list. 
+    
+    Returns:
+        list -- list of family lines
+    """
     lin_ls.append(a)
     for xs in link_list:
         # print('>', xs)
@@ -559,7 +587,11 @@ if __name__ == "__main__":
     big_list = make_lineage(se_dic, link_ls)
 
     family_dic = make_family_dic(big_list)
+
+    print('\n\nfamily dictionary:')
     pprint(family_dic)
+    print('\n-----------------------')
+    
     outfile_path = cycle_files(args.experiment_path, family_dic, args.time)
 
     add_positions_to_output(pos_dic, outfile_path, args.time)
