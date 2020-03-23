@@ -1,15 +1,25 @@
 tRecs Requirements and set up
 
 1. Download python3 and install
+
 2. Download tRecs from git
+
 4. Navigate to the tRecs directory in terminal or command prompt
+
 5. If you want to use a virtual environtment create a virtual environment:
+
 	5a. open a terminal or console window
+	
 	5b. type: python3 -m venv venv
+	
 	5c. select virtual envrionment:
+	
 		windows type: venv\Scripts\activate.bat
+		
 		mac type: source venv/bin/activate
+		
 6. install requirements:
+
 	type: pip install -r requirements.txt
 
 
