@@ -8,9 +8,9 @@ positional arguments:
 
 optional arguments:
   -h, --help         show this help message and exit
-  -c C, -channel C
-  -v V, -variable V
-
+  -c C, -channel C   The channel as a integer number. Default == 2
+  -v V, -variable V  The variable you wish to plot e.g "Intensity Mean".
+                     Default == "Intensity Mean"
 
 """
 
@@ -21,8 +21,8 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument('tRecs_file')
-    parser.add_argument('-c', '-channel', type=int, default=2)
-    parser.add_argument('-v', '-variable', type=str, default='Intensity Mean')
+    parser.add_argument('-c', '-channel', type=int, default=2, help='The channel as a integer number. Default == 2')
+    parser.add_argument('-v', '-variable', type=str, default='Intensity Mean', help='The variable you wish to plot e.g "Intensity Mean". Default == "Intensity Mean"')
 
     args = parser.parse_args()
 

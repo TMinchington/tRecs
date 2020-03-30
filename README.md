@@ -63,6 +63,7 @@ positional arguments:
 
 optional arguments:
   -h, --help         show this help message and exit
-  -c C, -channel C
-  -v V, -variable V
+  -c C, -channel C   The channel as a integer number. Default == 2
+  -v V, -variable V  The variable you wish to plot e.g "Intensity Mean".
+                     Default == "Intensity Mean"
 
