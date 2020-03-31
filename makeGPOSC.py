@@ -18,6 +18,8 @@ if __name__ == "__main__":
 
     import pandas as pd
     import argparse
+    from sys import platform
+    
 
     parser = argparse.ArgumentParser()
     parser.add_argument('tRecs_file')
@@ -25,8 +27,14 @@ if __name__ == "__main__":
     parser.add_argument('-v', '-variable', type=str, default='Intensity Mean', help='The variable you wish to plot e.g "Intensity Mean". Default == "Intensity Mean"')
 
     args = parser.parse_args()
+    
+    if platform == "win32":
 
-    data_file = pd.read_csv(args.tRecs_file, header=0, sep='\t')
+      data_file = pd.read_csv(args.tRecs_file, header=0, sep='\t', encoding='iso-8859-15')
+    
+    else:
+
+      data_file = pd.read_csv(args.tRecs_file, header=0, sep='\t')
 
     data_file = data_file.loc[(data_file.variable==args.v)&(data_file.channel==args.c)]
 
