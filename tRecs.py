@@ -505,8 +505,8 @@ def cycle_files(experiment_path, family_dic, time_interval):
                 mins, hours, days = get_times(float(Time), time_interval)
 
                 for full_track in set(full_track_ls):
-
-                    outfile.write('\t'.join([str(x) for x in [variable, value, Unit, Channel, Image, Time, mins, hours, days, TrackID, ID, family, full_track, generation, parent]])+'\n')
+                    outstr = '\t'.join([str(x) for x in [variable, value, Unit, Channel, Image, Time, mins, hours, days, TrackID, ID, family, full_track, generation, parent]])+'\n'
+                    outfile.write(outstr)
 
     outfile.close()
 
@@ -533,7 +533,7 @@ def add_positions_to_output(pos_dic, outfile_path, time_interval):
 
                 for full_track in set(full_track_ls):
                     outstr = '\t'.join([str(x) for x in [variable, value, Unit, 'na', 'na', Time, mins, hours, days, TrackID, 'na', family, full_track, generation, parent]])+'\n'
-                    outfile.write(outstr.encode('utf-8'))
+                    outfile.write(outstr)
 
     outfile.close()
 
