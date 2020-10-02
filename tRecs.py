@@ -478,7 +478,7 @@ def cycle_files(experiment_path, family_dic, time_interval):
 
         in_data = False
 
-        with open(os.path.join(experiment_path, fileX)) as open_fileX:
+        with open(os.path.join(experiment_path, fileX), errors='ignore') as open_fileX:
 
             for line in open_fileX:
 
