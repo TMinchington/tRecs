@@ -444,6 +444,11 @@ def trecs2():
     print("MMMMMMMMMMMMMMN0dc:;,''''...........    .:0WMMMMMMMMMMMNx;'...',;:lodkOXWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM")
     print("MMMMMMMMMMMMMNkl:;,'''','...........   .cKMMMMMMMMMMMMWOc:cldk0XNWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM")
 
+def get_header_dic(head_line):
+    dicHead = {}
+    for n, x in enumerate(head_line):
+        dicHead[x] = n
+    return dicHead
 def cycle_files(experiment_path, family_dic, time_interval):
 
     import os
@@ -460,14 +465,14 @@ def cycle_files(experiment_path, family_dic, time_interval):
     outfile_path = os.path.join(outdir, f'{d1}-output_data.tsv')
 
     outfile = open(outfile_path, 'w')
-
-    outfile.write('variable\tvalue\tunit\tchannel\timage\ttime\tmins\thours\tdays\ttrackID\tid\tfamily\tfull_track\tgeneration\tparent\n')
+    head_line = 'variable\tvalue\tunit\tchannel\timage\ttime\tmins\thours\tdays\ttrackID\tid\tfamily\tfull_track\tgeneration\tparent\n'
+    outfile.write(head_line)
 
     files_to_import = [x for x in os.listdir(experiment_path) if '.csv' in x]
-
+    print(files_to_import)
     if len(files_to_import) == 0:
         exit('No files found')
-
+    head_ls = head_line.strip().split('\t')[:5]
     for fileX in files_to_import:
         # print(f'Importing: {fileX}')
 
@@ -478,13 +483,12 @@ def cycle_files(experiment_path, family_dic, time_interval):
             for line in open_fileX:
 
                 if 'TrackID,' in line:
-
+                    
                     in_data = True
                     split_line = line.strip().split(',')
                     variable = split_line[0]
-                    if len(split_line) != 9:
-                        break
-                    # print(line)
+                    dicHead = get_header_dic(split_line)
+                    
                     continue
 
                 elif not in_data:
@@ -492,7 +496,18 @@ def cycle_files(experiment_path, family_dic, time_interval):
 
                 # print(line)
                 
-                value, Unit, Category, Channel, Image, Time, TrackID, ID, NA = line.strip().split(',')
+                # value, Unit, Category, Channel, Time, TrackID, ID, NA = line.strip().split(',')
+
+                split_line = line.strip().split(',')
+
+                temp_dic = {}
+
+                for key in dicHead:
+                    temp_dic[key] = split_line[dicHead[key]]
+
+                TrackID = temp_dic['TrackID']
+                ID = temp_dic['ID']
+                Time = temp_dic['Time']
 
                 try:
 
@@ -505,8 +520,18 @@ def cycle_files(experiment_path, family_dic, time_interval):
                 mins, hours, days = get_times(float(Time), time_interval)
 
                 for full_track in set(full_track_ls):
-                    outstr = '\t'.join([str(x) for x in [variable, value, Unit, Channel, Image, Time, mins, hours, days, TrackID, ID, family, full_track, generation, parent]])+'\n'
+                    outls1 = []
+                    for x in head_ls:
+                        try:
+                            outls1.append(temp_dic[dicHead[x]])
+
+                        except KeyError:
+                            outls1.append('NA')
+
+                    outstr = '\t'.join([str(x) for x in outls1])+'\t'.join([str(x) for x in [Time, mins, hours, days, TrackID, ID, family, full_track, generation, parent]])+'\n'
                     outfile.write(outstr)
+                    # if 'Position' not in variable:
+                    #     print(variable)
 
     outfile.close()
 
@@ -587,7 +612,7 @@ if __name__ == "__main__":
     big_list = make_lineage(se_dic, link_ls)
 
     family_dic = make_family_dic(big_list)
-
+    print(big_list)
     print('\n\nfamily dictionary:')
     pprint(family_dic)
     print('\n-----------------------')
