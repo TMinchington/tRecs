@@ -449,6 +449,7 @@ def get_header_dic(head_line):
     for n, x in enumerate(head_line):
         dicHead[x] = n
     return dicHead
+
 def cycle_files(experiment_path, family_dic, time_interval):
 
     import os
@@ -485,10 +486,10 @@ def cycle_files(experiment_path, family_dic, time_interval):
                 if 'TrackID,' in line:
                     
                     in_data = True
-                    split_line = line.strip().split(',')
+                    split_line = line.lower().strip().split(',')
                     variable = split_line[0]
                     dicHead = get_header_dic(split_line)
-                    
+                    dicHead['value'] = 0
                     continue
 
                 elif not in_data:
@@ -504,10 +505,10 @@ def cycle_files(experiment_path, family_dic, time_interval):
 
                 for key in dicHead:
                     temp_dic[key] = split_line[dicHead[key]]
-
-                TrackID = temp_dic['TrackID']
-                ID = temp_dic['ID']
-                Time = temp_dic['Time']
+                temp_dic['variable'] = variable
+                TrackID = temp_dic['trackid']
+                ID = temp_dic['id']
+                Time = temp_dic['time']
 
                 try:
 
@@ -522,13 +523,14 @@ def cycle_files(experiment_path, family_dic, time_interval):
                 for full_track in set(full_track_ls):
                     outls1 = []
                     for x in head_ls:
+                        print(x, temp_dic)
                         try:
-                            outls1.append(temp_dic[dicHead[x]])
+                            outls1.append(temp_dic[x])
 
                         except KeyError:
                             outls1.append('NA')
 
-                    outstr = '\t'.join([str(x) for x in outls1])+'\t'.join([str(x) for x in [Time, mins, hours, days, TrackID, ID, family, full_track, generation, parent]])+'\n'
+                    outstr = '\t'.join([str(x) for x in outls1])+'\t'+'\t'.join([str(x) for x in [Time, mins, hours, days, TrackID, ID, family, full_track, generation, parent]])+'\n'
                     outfile.write(outstr)
                     # if 'Position' not in variable:
                     #     print(variable)
