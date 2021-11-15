@@ -106,6 +106,7 @@ def make_start_and_ends_dics(track_dic):
 
     return start_dic, end_dic
 
+
 def get_closest_end(enders, starters, end, pos_dic):
 
     """ finds the closest start cell to the supplied end cell
@@ -116,10 +117,10 @@ def get_closest_end(enders, starters, end, pos_dic):
 
     from pprint import pprint as pp
     dis_dic = {}
-    pp(pos_dic[end+1])
+    # pp(pos_dic[end+1])
 
-    print(starters)
-    print(enders)
+    # print(starters)
+    # print(enders)
 
     for endCell in enders:
     
@@ -131,6 +132,7 @@ def get_closest_end(enders, starters, end, pos_dic):
         dis_dic[dis] = [(endCell, starters[0])]
 
     return dis_dic[min(dis_dic)]
+
 
 def optimise_smallest_distance(enders, starters, end, pos_dic):
 
@@ -155,9 +157,13 @@ def optimise_smallest_distance(enders, starters, end, pos_dic):
     loop= 0
 
     if len(starters) != 2*len(enders):
-        print(enders)
-        print(starters)
+        # print(enders)
+        # print(starters)
         exit('count error')
+
+    if "1000052577" in enders:
+        print(starters)
+        print(enders)
 
     for startCells in itertools.permutations(starters, len(enders)*2):
         tot_dis = 0
@@ -165,9 +171,9 @@ def optimise_smallest_distance(enders, starters, end, pos_dic):
 
         for endCell, stCellgroup in zip(enders, np.array_split(startCells, len(enders))):
             if len(stCellgroup) != 2:
-                print(endCell, stCellgroup, len(enders), len(startCells))
-                print(enders)
-                print(starters)
+                # print(endCell, stCellgroup, len(enders), len(startCells))
+                # print(enders)
+                # print(starters)
                 exit('broken_start')
             for stC in stCellgroup:
 
@@ -181,9 +187,9 @@ def optimise_smallest_distance(enders, starters, end, pos_dic):
                 dis = (stx-endx)**2 + (sty-endy)**2 + (stz-endz)**2
 
                 tot_dis += dis
-
+                # print(tot_dis)
         total_dis_dic[tot_dis] = (enders, startCells)
-    pp.pprint(total_dis_dic)
+    # pp.pprint(total_dis_dic)
 
     min_dis = min(total_dis_dic)
 
@@ -193,7 +199,12 @@ def optimise_smallest_distance(enders, starters, end, pos_dic):
         for stC in stCellgroup:
             linked.append((endCell, stC))
 
+    # if "1000052577" in enders:
+    #     print(linked)
+    #     exit()
+
     return linked
+
 
 def optimise_smallest_distance_with_intensity(enders, starters, end, intense):
 
@@ -251,13 +262,13 @@ def select_children(enders, starters, pos_dic, end):
     links = []
     if len(enders) > 1:
         
-        print(f'{len(enders)} enders | {len(starters)} starters')
+        # print(f'{len(enders)} enders | {len(starters)} starters')
         # links.append(f'{len(enders)} enders')
         links += optimise_smallest_distance(enders[:], starters[:], end, pos_dic)
 
     elif len(starters) > 2:
 
-        print(f'{len(starters)} new starter')
+        # print(f'{len(starters)} new starter')
 
         # links.append(f'{len(enders)} enders')
 
@@ -285,8 +296,8 @@ def missing_links(link_list):
 
     links = [x for x in link_list if not 'blank' in x]
 
-    print('missing: ', missing)
-    print('links: ', links)
+    # print('missing: ', missing)
+    # print('links: ', links)
 
     return links
 
@@ -309,7 +320,8 @@ def get_children(start_dic, end_dic, pos_dic):
             link_list += select_children(end_dic[end], start_dic[end+1], pos_dic, end)
 
         else:
-            print(end, 'end')
+            continue
+            # print(end, 'end')
 
     return missing_links(link_list)
 
@@ -386,6 +398,7 @@ def make_family_dic(big_list):
         family_counter+=1
     return family_dic
 
+
 def get_times(time, interval):
 
     mins = (time-1)*interval
@@ -444,11 +457,13 @@ def trecs2():
     print("MMMMMMMMMMMMMMN0dc:;,''''...........    .:0WMMMMMMMMMMMNx;'...',;:lodkOXWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM")
     print("MMMMMMMMMMMMMNkl:;,'''','...........   .cKMMMMMMMMMMMMWOc:cldk0XNWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM")
 
+
 def get_header_dic(head_line):
     dicHead = {}
     for n, x in enumerate(head_line):
         dicHead[x] = n
     return dicHead
+
 
 def cycle_files(experiment_path, family_dic, time_interval):
 
@@ -470,7 +485,7 @@ def cycle_files(experiment_path, family_dic, time_interval):
     outfile.write(head_line)
 
     files_to_import = [x for x in os.listdir(experiment_path) if '.csv' in x]
-    print(files_to_import)
+    # print(files_to_import)
     if len(files_to_import) == 0:
         exit('No files found')
     head_ls = head_line.strip().split('\t')[:5]
@@ -523,7 +538,7 @@ def cycle_files(experiment_path, family_dic, time_interval):
                 for full_track in set(full_track_ls):
                     outls1 = []
                     for x in head_ls:
-                        print(x, temp_dic)
+                        # print(x, temp_dic)
                         try:
                             outls1.append(temp_dic[x])
 
@@ -538,6 +553,7 @@ def cycle_files(experiment_path, family_dic, time_interval):
     outfile.close()
 
     return outfile_path
+
 
 def add_positions_to_output(pos_dic, outfile_path, time_interval):
 
@@ -565,6 +581,32 @@ def add_positions_to_output(pos_dic, outfile_path, time_interval):
     outfile.close()
 
 
+def output_start_and_ends_file_for_plotting(se_dic, family_dic, position, experiment_path):
+    
+    outdir = os.path.join(experiment_path, os.path.split(experiment_path)[1]+f'_output_data')
+    outfile = open(os.path.join(outdir, "testPositions.tsv"),'w')
+    outfile.write("cell\ttime\tfamily\tx\ty\tz\n")
+    pprint(family_dic)
+    for key in se_dic:
+        print(key)
+        start, end = se_dic[key]    
+        # key = '-'.join(sorted([]))
+        try:
+            family = family_dic[key][3]
+        except KeyError:
+            family = key
+            print("missing cell", key)
+
+        x, y, z = pos_dic[start][key]
+        outfile.write(f"{key}\t{start}\t{family}\t{x}\t{y}\t{z}\n")
+
+        x, y, z = pos_dic[end][key]
+        outfile.write(f"{key}\t{end}\t{family}\t{x}\t{y}\t{z}\n")
+    
+
+    
+
+
 if __name__ == "__main__":
 
     from pprint import pprint
@@ -583,6 +625,8 @@ if __name__ == "__main__":
 
     se_dic, pos_dic = get_start_and_end(test_track)
 
+    pprint(se_dic)
+
     start_dic, end_dic = make_start_and_ends_dics(se_dic)
 
     # for track in se_dic:
@@ -598,7 +642,7 @@ if __name__ == "__main__":
     #     print('end', end, end_dic[end])
 
     link_ls = get_children(start_dic, end_dic, pos_dic)
-    # pprint(link_ls)
+    pprint(link_ls)
     
     link_dic = {}
 
@@ -611,16 +655,19 @@ if __name__ == "__main__":
             link_dic[x[0]] = [x[1]]
     
     # exit()
+
+    pprint(link_dic)
+
     big_list = make_lineage(se_dic, link_ls)
 
     family_dic = make_family_dic(big_list)
-    print(big_list)
-    print('\n\nfamily dictionary:')
-    pprint(family_dic)
-    print('\n-----------------------')
-    
+    # print(big_list)
+    # print('\n\nfamily dictionary:')
+    # pprint(family_dic)
+    # print('\n-----------------------')
+    output_start_and_ends_file_for_plotting(se_dic, family_dic, pos_dic, args.experiment_path)
     outfile_path = cycle_files(args.experiment_path, family_dic, args.time)
-
+    outfile_path = outfile_path.replace(".tsv", "_debug.tsv") # enable when debugging
     add_positions_to_output(pos_dic, outfile_path, args.time)
 
     trecs2()
