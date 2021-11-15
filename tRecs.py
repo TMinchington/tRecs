@@ -161,9 +161,9 @@ def optimise_smallest_distance(enders, starters, end, pos_dic):
         # print(starters)
         exit('count error')
 
-    if "1000052577" in enders:
-        print(starters)
-        print(enders)
+    # if "1000052577" in enders:
+    #     print(starters)
+    #     print(enders)
 
     for startCells in itertools.permutations(starters, len(enders)*2):
         tot_dis = 0
@@ -245,7 +245,7 @@ def optimise_smallest_distance_with_intensity(enders, starters, end, intense):
                 tot_dis += dis
 
         total_dis_dic[tot_dis] = (enders, startCells)
-    pp.pprint(total_dis_dic)
+    # pp.pprint(total_dis_dic)
 
     min_dis = min(total_dis_dic)
 
@@ -586,7 +586,7 @@ def output_start_and_ends_file_for_plotting(se_dic, family_dic, position, experi
     outdir = os.path.join(experiment_path, os.path.split(experiment_path)[1]+f'_output_data')
     outfile = open(os.path.join(outdir, "testPositions.tsv"),'w')
     outfile.write("cell\ttime\tfamily\tx\ty\tz\n")
-    pprint(family_dic)
+    # pprint(family_dic)
     for key in se_dic:
         print(key)
         start, end = se_dic[key]    
@@ -625,7 +625,7 @@ if __name__ == "__main__":
 
     se_dic, pos_dic = get_start_and_end(test_track)
 
-    pprint(se_dic)
+    # pprint(se_dic)
 
     start_dic, end_dic = make_start_and_ends_dics(se_dic)
 
@@ -642,7 +642,7 @@ if __name__ == "__main__":
     #     print('end', end, end_dic[end])
 
     link_ls = get_children(start_dic, end_dic, pos_dic)
-    pprint(link_ls)
+    # pprint(link_ls)
     
     link_dic = {}
 
@@ -656,7 +656,7 @@ if __name__ == "__main__":
     
     # exit()
 
-    pprint(link_dic)
+    # pprint(link_dic)
 
     big_list = make_lineage(se_dic, link_ls)
 
@@ -667,7 +667,7 @@ if __name__ == "__main__":
     # print('\n-----------------------')
     output_start_and_ends_file_for_plotting(se_dic, family_dic, pos_dic, args.experiment_path)
     outfile_path = cycle_files(args.experiment_path, family_dic, args.time)
-    outfile_path = outfile_path.replace(".tsv", "_debug.tsv") # enable when debugging
+    # outfile_path = outfile_path.replace(".tsv", "_debug.tsv") # enable when debugging
     add_positions_to_output(pos_dic, outfile_path, args.time)
 
     trecs2()
